@@ -39,3 +39,55 @@ def save_image(im: Image.Image, original_path: str, suffix: str = "", out_format
         print(f"✅ Mentve: {outpath}")
     except Exception as e:
         print(f"⚠️ Nem sikerült menteni {outpath}: {e}")
+
+# Képmódosító műveletek
+
+# Átméretezés
+def resize_images(percent=None, width=None, height=None):
+    imgs = list_images()
+    if not imgs:
+        print("❌ Nincs egy kép sem az input mappában.")
+        return
+
+    for p in imgs:
+        try:
+            with Image.open(p) as im:
+                orig_w, orig_h = im.size
+                if percent is not None:
+                    new_w = max(1, int(orig_w * percent))
+                    new_h = max(1, int(orig_h * percent))
+                else:
+                    if height is None:
+                        new_w = width
+                        new_h = max(1, int(orig_h * (new_w / orig_w)))
+                    else:
+                        new_w = width
+                        new_h = height
+                new_im = im.resize((new_w, new_h), Image.LANCZOS)
+                save_image(new_im, p, f"{new_w}x{new_h}")
+        except Exception as e:
+            print(f"Hiba a(z) {p} képnél: {e}")
+
+#Méretbekérés
+def input_percent_or_dims():
+    while True:
+        s = input("Add meg a méretet (50% / 800x600 / 800): ").strip()
+        if s.endswith("%"):
+            try:
+                perc = float(s[:-1]) / 100.0
+                return {"percent": perc}
+            except:
+                print("Érvénytelen százalék.")
+                continue
+        if "x" in s:
+            try:
+                w, h = s.lower().split("x")
+                return {"w": int(w), "h": int(h)}
+            except:
+                print("Érvénytelen formátum. Példa: 800x600")
+                continue
+        try:
+            return {"w": int(s), "h": None}
+        except:
+            print("Érvénytelen érték.")
+
