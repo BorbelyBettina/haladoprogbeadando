@@ -124,3 +124,17 @@ def crop_images(left, top, right, bottom):
         except Exception as e:
             print(f"Hiba: {e}")
 
+#Konvertálás
+def convert_format(new_ext: str):
+    imgs = list_images()
+    if not imgs:
+        print("❌ Nincs kép az input mappában.")
+        return
+    for p in imgs:
+        try:
+            with Image.open(p) as im:
+                save_image(im, p, suffix=f"conv_{new_ext}", out_format=new_ext)
+        except Exception as e:
+            print(f"Hiba: {e}")
+
+
