@@ -137,4 +137,16 @@ def convert_format(new_ext: str):
         except Exception as e:
             print(f"Hiba: {e}")
 
+#Törlés
+def clear_output():
+    if not os.path.exists(OUTPUT_DIR):
+        print("Output mappa nem létezik.")
+        return
+    for f in os.listdir(OUTPUT_DIR):
+        try:
+            os.remove(os.path.join(OUTPUT_DIR, f))
+        except Exception as e:
+            print(f"Nem sikerült törölni {f}: {e}")
+    print("✅ Output mappa törölve.")
+
 
