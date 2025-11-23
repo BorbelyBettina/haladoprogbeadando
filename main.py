@@ -91,3 +91,16 @@ def input_percent_or_dims():
         except:
             print("Érvénytelen érték.")
 
+#Forgatás
+def rotate_images(angle: int):
+    imgs = list_images()
+    if not imgs:
+        print("❌ Nincs kép az input mappában.")
+        return
+    for p in imgs:
+        try:
+            with Image.open(p) as im:
+                rotated = im.rotate(angle, expand=True)
+                save_image(rotated, p, f"rot{angle}")
+        except Exception as e:
+            print(f"Hiba: {e}")
