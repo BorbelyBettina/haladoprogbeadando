@@ -104,3 +104,23 @@ def rotate_images(angle: int):
                 save_image(rotated, p, f"rot{angle}")
         except Exception as e:
             print(f"Hiba: {e}")
+
+#Kivágás
+def crop_images(left, top, right, bottom):
+    imgs = list_images()
+    if not imgs:
+        print("❌ Nincs kép az input mappában.")
+        return
+    for p in imgs:
+        try:
+            with Image.open(p) as im:
+                w, h = im.size
+                left_c = max(0, min(left, w - 1))
+                top_c = max(0, min(top, h - 1))
+                right_c = max(left_c + 1, min(right, w))
+                bottom_c = max(top_c + 1, min(bottom, h))
+                cropped = im.crop((left_c, top_c, right_c, bottom_c))
+                save_image(cropped, p, f"crop_{left_c}_{top_c}_{right_c}_{bottom_c}")
+        except Exception as e:
+            print(f"Hiba: {e}")
+
