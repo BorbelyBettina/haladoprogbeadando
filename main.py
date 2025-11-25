@@ -261,3 +261,9 @@ def main_loop():
         else:
             print("Érvénytelen választás.")
 
+if __name__ == "__main__":
+    try:
+        main_loop()
+    except KeyboardInterrupt:
+        print("\nKilépés megszakítva a felhasználó által.")
+
