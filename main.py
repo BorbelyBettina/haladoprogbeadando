@@ -206,3 +206,16 @@ def batch_process_images():
 
         except Exception as e:
             print(f"Hiba a {p} képnél: {e}")
+
+# Menü
+def print_menu():
+    print("\nKépmódosító program")
+    print("-------------------")
+    print("1. Képek átméretezése")
+    print("2. Képek forgatása")
+    print("3. Képek kivágása")
+    print("4. Képek formátum konvertálása")
+    print("5. Több művelet egyszerre (batch)")
+    print("6. Output mappa ürítése")
+    print("7. Kilépés")
+
