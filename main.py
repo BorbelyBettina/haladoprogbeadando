@@ -42,7 +42,7 @@ def save_image(im: Image.Image, original_path: str, suffix: str = "", out_format
 
 # Képmódosító műveletek
 
-# Átméretezés
+#Átméretezés
 def resize_images(percent=None, width=None, height=None):
     imgs = list_images()
     if not imgs:
@@ -149,7 +149,7 @@ def clear_output():
             print(f"Nem sikerült törölni {f}: {e}")
     print("✅ Output mappa törölve.")
 
-# Több művelet egyszerre
+#Több művelet egyszerre
 def batch_process_images():
     imgs = list_images()
     if not imgs:
@@ -207,7 +207,7 @@ def batch_process_images():
         except Exception as e:
             print(f"Hiba a {p} képnél: {e}")
 
-# Menü
+#Menü
 def print_menu():
     print("\nKépmódosító program")
     print("-------------------")
@@ -218,4 +218,46 @@ def print_menu():
     print("5. Több művelet egyszerre (batch)")
     print("6. Output mappa ürítése")
     print("7. Kilépés")
+
+#Main loop
+def main_loop():
+    ensure_directories()
+    while True:
+        print_menu()
+        choice = input("Választás (1-7): ").strip()
+        if choice == "1":
+            # Átméretezés
+            size = input_percent_or_dims()
+            if "percent" in size:
+                resize_images(percent=size["percent"])
+            else:
+                resize_images(width=size["w"], height=size["h"])
+        elif choice == "2":
+            # Forgatás
+            angle = int(input("Forgatás szöge: "))
+            rotate_images(angle)
+        elif choice == "3":
+            # Kivágás
+            print("Add meg a kivágási értékeket:")
+            left = int(input("Bal: "))
+            top = int(input("Fent: "))
+            right = int(input("Jobb: "))
+            bottom = int(input("Lent: "))
+            crop_images(left, top, right, bottom)
+        elif choice == "4":
+            # Formátum konvertálás
+            new_ext = input("Új formátum (pl: jpg, png): ").strip().lower()
+            convert_format(new_ext)
+        elif choice == "5":
+            # Több művelet egyszerre
+            batch_process_images()
+        elif choice == "6":
+            # Output mappa ürítése
+            clear_output()
+        elif choice == "7":
+            # Kilépés
+            print("Kilépés...")
+            break
+        else:
+            print("Érvénytelen választás.")
 
