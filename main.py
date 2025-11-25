@@ -149,4 +149,60 @@ def clear_output():
             print(f"Nem sikerült törölni {f}: {e}")
     print("✅ Output mappa törölve.")
 
+# Több művelet egyszerre
+def batch_process_images():
+    imgs = list_images()
+    if not imgs:
+        print("❌ Nincs kép az input mappában.")
+        return
 
+    do_resize = input("Átméretezés? (i/n): ").lower() == "i"
+    do_rotate = input("Forgatás? (i/n): ").lower() == "i"
+    do_crop = input("Kivágás? (i/n): ").lower() == "i"
+    do_convert = input("Formátum konvertálás? (i/n): ").lower() == "i"
+
+    if do_resize:
+        size = input_percent_or_dims()
+    if do_rotate:
+        angle = int(input("Forgatás szöge: "))
+    if do_crop:
+        print("Add meg a kivágási értékeket:")
+        left = int(input("Bal: "))
+        top = int(input("Fent: "))
+        right = int(input("Jobb: "))
+        bottom = int(input("Lent: "))
+    if do_convert:
+        target_ext = input("Új formátum (pl: jpg, png): ").strip().lower()
+
+    for p in imgs:
+        try:
+            with Image.open(p) as im:
+                # Átméretezés
+                if do_resize:
+                    if "percent" in size:
+                        new_w = max(1, int(im.width * size["percent"]))
+                        new_h = max(1, int(im.height * size["percent"]))
+                    else:
+                        new_w = size["w"] if size["w"] is not None else im.width
+                        new_h = size["h"] if size["h"] is not None else im.height
+                    im = im.resize((new_w, new_h), Image.LANCZOS)
+
+                # Forgatás
+                if do_rotate:
+                    im = im.rotate(angle, expand=True)
+
+                # Kivágás
+                if do_crop:
+                    w, h = im.size
+                    left_c = max(0, min(left, w - 1))
+                    top_c = max(0, min(top, h - 1))
+                    right_c = max(left_c + 1, min(right, w))
+                    bottom_c = max(top_c + 1, min(bottom, h))
+                    im = im.crop((left_c, top_c, right_c, bottom_c))
+
+                # Formátum konvertálás
+                out_format = target_ext if do_convert else None
+                save_image(im, p, suffix="_batch", out_format=out_format)
+
+        except Exception as e:
+            print(f"Hiba a {p} képnél: {e}")
