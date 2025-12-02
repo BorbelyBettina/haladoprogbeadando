@@ -4,7 +4,7 @@ import shutil
 from PIL import Image
 
 INPUT_DIR = "input_images"
-OUTPUT_DIR = "modositott_kepek"
+OUTPUT_DIR = "output_images"
 
 
 def ensure_directories():
@@ -24,13 +24,19 @@ def list_images():
 
 
 def save_image(im: Image.Image, original_path: str, suffix: str = "", out_format: str = None):
-    #Kép mentése az output mappába
     base = os.path.basename(original_path)
     name, ext = os.path.splitext(base)
+    
+    save_ext = out_format.lower() if out_format else ext[1:].lower()
+    
+    if save_ext in ("jpg", "jpeg") and im.mode in ("RGBA", "LA"):
+        im = im.convert("RGB")
+    
     if out_format:
         ext = "." + out_format.lower()
     outname = f"{name}_{suffix}{ext}"
     outpath = os.path.join(OUTPUT_DIR, outname)
+    
     try:
         if out_format:
             im.save(outpath, out_format.upper())
